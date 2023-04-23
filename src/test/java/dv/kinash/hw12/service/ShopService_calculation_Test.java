@@ -4,21 +4,29 @@ import dv.kinash.hw12.exceptions.ItemPriceNotFoundException;
 import dv.kinash.hw12.repository.ShopPriceRepository;
 import dv.kinash.hw12.repository.entity.ShopPrice;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ShopService_calculation_Test {
+    @Mock
     private static ShopPriceRepository repository;
+    @InjectMocks
     private static ShopService shopService;
 
-    @BeforeAll
-    static void setRepositoryAndShopService(){
-        repository = Mockito.mock(ShopPriceRepository.class);
+    @BeforeEach
+    void setRepositoryAndShopService(){
         Mockito.when(repository.findById(Mockito.anyString())).thenAnswer(invocation -> {
                     String item = invocation.getArgument(0);
                     switch (item) {
@@ -38,8 +46,6 @@ public class ShopService_calculation_Test {
                             return Optional.empty();
                     }
                 });
-
-        shopService = new ShopService(repository);
     }
 
     @Test
